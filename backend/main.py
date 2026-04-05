@@ -143,6 +143,8 @@ async def process_video_generator(url: str = None, file_obj=None, file_ext='.mp4
             
             print(f"Systematic DNS Resolution successful for {hostname}: {resolved_ip}")
 
+            # Step 1.2: Enhanced yt-dlp options for Instagram/YouTube compatibility
+            cookie_path = os.path.join(os.path.dirname(__file__), "cookies.txt")
             ydl_opts = {
                 'format': 'best',
                 'outtmpl': temp_video_path,
@@ -150,11 +152,18 @@ async def process_video_generator(url: str = None, file_obj=None, file_ext='.mp4
                 'no_warnings': False,
                 'nocheckcertificate': True,
                 'geo_bypass': True,
-                'user_agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
-                'cookiefile': None,
+                'user_agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                'cookiefile': cookie_path if os.path.exists(cookie_path) else None,
                 'source_address': '0.0.0.0',
                 'noproxy': True,
-                'extractor_args': {'youtube': {'player_client': ['ios']}},
+                'http_headers': {
+                    'Referer': 'https://www.instagram.com/',
+                    'Origin': 'https://www.instagram.com/',
+                },
+                'extractor_args': {
+                    'youtube': {'player_client': ['ios']},
+                    'instagram': {'get_api_info': True}
+                },
             }
 
             # Map the target domain and its variant to the resolved IP for a total bypass

@@ -16,7 +16,11 @@ def get_openai_client():
     api_key = os.environ.get("OPENROUTER_API_KEY", "")
     return OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key=api_key
+        api_key=api_key,
+        default_headers={
+            "HTTP-Referer": "https://reel-analyzer.local", # Replace with actual site if deployed
+            "X-Title": "ReelAnalyzer",
+        }
     )
 
 def extract_transcript_and_metrics(audio_path: str) -> dict:

@@ -3,6 +3,8 @@ import shutil
 import json
 import asyncio
 import uuid
+import socket
+import subprocess
 from tempfile import NamedTemporaryFile
 from dotenv import load_dotenv
 
@@ -43,6 +45,29 @@ class ChatRequest(BaseModel):
     transcript_text: str
     question: str
 
+def resolve_hostname_robustly(hostname: str) -> str:
+    """Try multiple methods to resolve a hostname to an IP."""
+    # Method 1: Standard socket (fastest)
+    try:
+        return socket.gethostbyname(hostname)
+    except:
+        pass
+    
+    # Method 2: nslookup via subprocess (often bypasses Python-specific blocks)
+    try:
+        res = subprocess.check_output(["nslookup", hostname], stderr=subprocess.DEVNULL, timeout=2).decode()
+        # Look for the last 'Address: ' line which isn't the DNS server's address
+        addresses = []
+        for line in res.splitlines():
+            if "Address:" in line and "#" not in line:
+                addresses.append(line.split("Address:")[1].strip())
+        if addresses:
+            return addresses[-1]
+    except:
+        pass
+    
+    return None
+
 def format_sse(event_name: str, payload: dict) -> str:
     """Format data as Server-Sent Event string."""
     return f"event: {event_name}\ndata: {json.dumps(payload)}\n\n"
@@ -59,14 +84,32 @@ async def process_video_generator(url: str = None, file_obj=None, file_ext='.mp4
             yield format_sse("progress", {"percentage": 10, "message": "Downloading video from URL..."})
             await asyncio.sleep(0.5)
             temp_video_path = f"/tmp/reel_video_{hash(url)}.mp4"
+            # Step 1.1: Pre-resolution DNS health check for IPv4 (Robust)
+            resolved_ip = resolve_hostname_robustly("www.youtube.com")
+            if not resolved_ip:
+                yield format_sse("error", {"detail": "DNS resolution failed for www.youtube.com even with fallbacks. Your local system is strictly blocking this process."})
+                return
+            
+            print(f"DNS Resolution successful: {resolved_ip}")
+
             ydl_opts = {
                 'format': 'best',
                 'outtmpl': temp_video_path,
-                'quiet': True,
-                'no_warnings': True,
+                'quiet': False,
+                'no_warnings': False,
+                'nocheckcertificate': True,
+                'geo_bypass': True,
+                'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                'cookiefile': None,
+                'source_address': '0.0.0.0', # Force IPv4 to avoid broken IPv6 networking
+                'noproxy': True, # Disable any system proxies which may interfere
             }
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                ydl.download([url])
+            try:
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                    ydl.download([url])
+            except Exception as download_error:
+                print(f"yt-dlp download error: {str(download_error)}")
+                raise Exception(f"Failed to download video from URL: {str(download_error)}")
         else:
             yield format_sse("progress", {"percentage": 10, "message": "Saving uploaded video file..."})
             await asyncio.sleep(0.5)

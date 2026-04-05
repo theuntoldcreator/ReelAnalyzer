@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Synthetix Lens | Reel Analyzer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-high": "#141f38",
+                    "on-surface-variant": "#a3aac4",
+                    "surface-dim": "#060e20",
+                    "on-tertiary-fixed-variant": "#6d104e",
+                    "secondary": "#53ddfc",
+                    "primary-container": "#9396ff",
+                    "tertiary": "#ff9dd1",
+                    "error": "#ff6e84",
+                    "error-container": "#a70138",
+                    "on-error-container": "#ffb2b9",
+                    "secondary-dim": "#40ceed",
+                    "secondary-container": "#00687a",
+                    "outline": "#6d758c",
+                    "primary": "#a3a6ff",
+                    "inverse-on-surface": "#4d556b",
+                    "secondary-fixed-dim": "#48d4f3",
+                    "error-dim": "#d73357",
+                    "on-tertiary-container": "#5e0042",
+                    "surface-container": "#0f1930",
+                    "on-secondary": "#004b58",
+                    "on-secondary-container": "#ecfaff",
+                    "primary-fixed": "#9396ff",
+                    "on-primary": "#0f00a4",
+                    "surface-container-highest": "#192540",
+                    "background": "#060e20",
+                    "secondary-fixed": "#65e1ff",
+                    "on-secondary-fixed-variant": "#005969",
+                    "on-tertiary-fixed": "#360024",
+                    "on-background": "#dee5ff",
+                    "on-primary-fixed": "#000000",
+                    "on-secondary-fixed": "#003a45",
+                    "on-error": "#490013",
+                    "on-primary-container": "#0a0081",
+                    "on-tertiary": "#6c0f4d",
+                    "surface-container-lowest": "#000000",
+                    "surface-bright": "#1f2b49",
+                    "inverse-surface": "#faf8ff",
+                    "primary-fixed-dim": "#8387ff",
+                    "surface": "#060e20",
+                    "on-primary-fixed-variant": "#0e009d",
+                    "inverse-primary": "#494bd7",
+                    "tertiary-fixed": "#fd8bca",
+                    "tertiary-container": "#fa88c8",
+                    "tertiary-fixed-dim": "#ee7ebc",
+                    "surface-container-low": "#091328",
+                    "surface-variant": "#192540",
+                    "on-surface": "#dee5ff",
+                    "tertiary-dim": "#eb7bba",
+                    "surface-tint": "#a3a6ff",
+                    "primary-dim": "#6063ee",
+                    "outline-variant": "#40485d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Manrope"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(15, 25, 48, 0.6);
+            backdrop-filter: blur(24px);
+        }
+        .ghost-border {
+            border: 1px solid rgba(64, 72, 93, 0.15);
+        }
+        body {
+            background-color: #060e20;
+            color: #dee5ff;
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-[#091328] z-[60] py-6 gap-2 font-['Manrope'] font-medium text-sm">
+<div class="px-6 mb-8">
+<h1 class="text-lg font-['Space_Grotesk'] font-black text-[#a3a6ff]">Synthetic Lens</h1>
+<p class="text-[10px] uppercase tracking-widest text-[#dee5ff]/40 mt-1">v2.4 Active</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-[#dee5ff]/60 hover:bg-[#141f38] hover:translate-x-1 transition-transform duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+                Home
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-[#a3a6ff]/10 to-transparent text-[#a3a6ff] border-l-4 border-[#a3a6ff] rounded-r-xl" href="#">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+                Trending
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#dee5ff]/60 hover:bg-[#141f38] hover:translate-x-1 transition-transform duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+                Project History
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#dee5ff]/60 hover:bg-[#141f38] hover:translate-x-1 transition-transform duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+                AI Insights
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#dee5ff]/60 hover:bg-[#141f38] hover:translate-x-1 transition-transform duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Team
+            </a>
+</nav>
+<div class="px-4 mt-auto space-y-1 pt-4 border-t border-[#40485d]/15">
+<a class="flex items-center gap-3 px-4 py-3 text-[#dee5ff]/60 hover:bg-[#141f38] transition-colors rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                Help
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#dee5ff]/60 hover:bg-[#141f38] transition-colors rounded-xl" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-8 w-full sticky top-0 z-50 backdrop-blur-xl bg-[#060e20]/60 h-16">
+<div class="flex items-center gap-8">
+<span class="font-['Space_Grotesk'] text-xl font-bold tracking-tighter text-[#dee5ff]">Dashboard</span>
+<nav class="hidden md:flex items-center gap-6 font-['Space_Grotesk'] text-sm tracking-tight">
+<a class="text-[#a3a6ff] border-b-2 border-[#a3a6ff] pb-1" href="#">Dashboard</a>
+<a class="text-[#dee5ff]/70 hover:text-[#a3a6ff] transition-colors duration-300" href="#">Analytics</a>
+<a class="text-[#dee5ff]/70 hover:text-[#a3a6ff] transition-colors duration-300" href="#">Templates</a>
+<a class="text-[#dee5ff]/70 hover:text-[#a3a6ff] transition-colors duration-300" href="#">Library</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#dee5ff]/70 hover:text-[#a3a6ff] transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-[#dee5ff]/70 hover:text-[#a3a6ff] transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest overflow-hidden border border-[#40485d]/30">
+<img alt="User profile" data-alt="close-up portrait of a professional male digital creator with glasses and friendly expression on a soft purple background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlOHDbR1PX09uUPw_GwerX26LU_cwE-rdjaUkWh6ttN0e528Cvaeflyr8PB6Zfo-CyMOvluU0u_5f9tB9C7z4GkuW3BcEvHdOJ5cLFiqE2OrKq1sg4HLa-Z0XLmAeKphm6KSVhfkrZ_1cFh27RCMvlb7e6Sp8R-Z4F0hOcNY0SR49p7AmBCPYSn2SzgL2P17CzSh60xGRWvTcDhb_Xo7tf3qm8uRfl3mTojCkzs4_pfhv0Rs3hvpDRiX3z1JViqlJoI6NIUxYVkec"/>
+</div>
+</div>
+</header>
+<section class="p-8 max-w-7xl mx-auto space-y-8">
+<!-- Hero / Input Section -->
+<div class="relative overflow-hidden rounded-xl p-8 bg-surface-container-low ghost-border">
+<div class="relative z-10 space-y-6">
+<div class="flex flex-col gap-2">
+<h2 class="text-3xl font-headline font-bold text-on-surface">Analyze New Content</h2>
+<p class="text-on-surface-variant max-w-2xl">Paste an Instagram Reel URL or upload your video file. Our AI will decompose the narrative, extract metrics, and generate optimization insights instantly.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+<div class="md:col-span-8 flex items-center bg-surface-container-highest rounded-xl px-4 py-1 ghost-border focus-within:ring-1 ring-primary/50 transition-all">
+<span class="material-symbols-outlined text-primary/60 mr-3" data-icon="link">link</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface w-full py-3 font-body" placeholder="https://www.instagram.com/reels/..." type="text"/>
+</div>
+<div class="md:col-span-4 flex gap-3">
+<button class="flex-1 bg-gradient-to-r from-primary to-primary-dim text-on-primary-fixed font-headline font-medium py-3 rounded-xl hover:shadow-[0_0_20px_rgba(163,166,255,0.3)] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+                                Analyze Reel
+                            </button>
+<button class="flex items-center justify-center w-14 bg-surface-container-highest ghost-border rounded-xl hover:bg-surface-bright transition-colors text-primary">
+<span class="material-symbols-outlined" data-icon="upload_file">upload_file</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Decorative Glow -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full"></div>
+</div>
+<!-- Content Area: Bento Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left Column: Video Preview & Transcript -->
+<div class="lg:col-span-7 space-y-6">
+<!-- Video Player Container -->
+<div class="bg-surface-container-high rounded-xl overflow-hidden aspect-video relative ghost-border group">
+<img alt="Video preview" class="w-full h-full object-cover opacity-60" data-alt="cinematic still from a high-quality vertical video showing a modern office workspace with neon lighting and high-tech equipment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBk9OW1X1wB9K_VXtIr2orkY6WhHKCRz_fljMyzzrmR0XxtmemStm35kXqfszs5qlAWmi7dZMqnwBj59U30GG1s7wMa5ieD0qkqMueuGiy5d0WyWY4ea7HnemsQHjxxT1RXVTMfaLhOOzcEbTfRbuYs1Z3LrnGddaf_UOVhXOuTqzcIeW4EMGHjNJmHX9qJvKQ3mg7tpNFumxQyc_syjqcvwWBZ4W85u6rxQjfvwOzj0vkIpw7uu4T1c-t0xIDXBTmgnrv-cOYEOoU"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<button class="w-16 h-16 rounded-full glass-panel flex items-center justify-center text-secondary border border-secondary/20 hover:scale-110 transition-transform shadow-2xl">
+<span class="material-symbols-outlined text-4xl" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<!-- Scrubber Mockup -->
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+<div class="h-1 w-full bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full w-1/3 bg-secondary-dim shadow-[0_0_10px_#40ceed]"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] font-label text-on-surface-variant">
+<span>00:14</span>
+<span>00:45</span>
+</div>
+</div>
+</div>
+<!-- Transcript Section -->
+<div class="bg-surface-container-low rounded-xl p-6 ghost-border">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline font-bold text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="notes">notes</span>
+                                Extracted Transcript
+                            </h3>
+<button class="text-xs font-label text-primary hover:underline">Copy All</button>
+</div>
+<div class="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar text-on-surface/80 font-body text-sm leading-relaxed">
+<p><span class="text-secondary/60 mr-2 font-label">00:01</span> "Hey everyone, today we're looking at the top 5 ways to optimize your workflow using AI agents."</p>
+<p class="bg-surface-container-highest p-3 rounded-lg border-l-2 border-primary"><span class="text-secondary/60 mr-2 font-label">00:08</span> "Notice how the transition here hits perfectly with the beat drop. This is a crucial hook point."</p>
+<p><span class="text-secondary/60 mr-2 font-label">00:15</span> "The main takeaway is that manual entry is dead. If you're not automating, you're falling behind."</p>
+<p><span class="text-secondary/60 mr-2 font-label">00:22</span> "Let's dive into the first tool on our list, which is Synthetix..."</p>
+</div>
+</div>
+</div>
+<!-- Right Column: AI Insights -->
+<div class="lg:col-span-5 space-y-6">
+<div class="bg-surface-container-high rounded-xl p-6 ghost-border relative overflow-hidden">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="font-headline font-bold text-lg text-on-surface">AI Insights</h3>
+<p class="text-xs text-on-surface-variant">Powered by Synthetic Lens v2.4</p>
+</div>
+<div class="bg-primary/20 text-primary px-3 py-1 rounded-full text-xl font-headline font-bold">
+                                94%
+                            </div>
+</div>
+<div class="space-y-6">
+<!-- Insight Card 1 -->
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-secondary font-headline text-sm font-medium">
+<span class="material-symbols-outlined text-sm" data-icon="auto_awesome">auto_awesome</span>
+                                    HOOK STRENGTH
+                                </div>
+<p class="text-sm text-on-surface/70">The first 3 seconds have high visual motion. Engagement probability is 82% above average for this niche.</p>
+</div>
+<!-- Insight Card 2 -->
+<div class="space-y-2">
+<div class="flex items-center gap-2 text-tertiary font-headline text-sm font-medium">
+<span class="material-symbols-outlined text-sm" data-icon="recommend">recommend</span>
+                                    IMPROVEMENT SUGGESTION
+                                </div>
+<div class="bg-surface-container-highest p-4 rounded-xl border border-tertiary/10">
+<p class="text-sm text-on-surface italic">"The call-to-action at 00:38 is slightly muffled by the background track. Increase mid-range vocal frequencies by +3dB."</p>
+</div>
+</div>
+<!-- Metrics Mini-Grid -->
+<div class="grid grid-cols-2 gap-4 pt-4 border-t border-outline-variant/15">
+<div class="p-3 rounded-xl bg-surface-container-lowest/40">
+<div class="text-[10px] text-on-surface-variant font-label uppercase tracking-tighter">Pacing</div>
+<div class="text-lg font-headline font-bold text-on-surface">Dynamic</div>
+</div>
+<div class="p-3 rounded-xl bg-surface-container-lowest/40">
+<div class="text-[10px] text-on-surface-variant font-label uppercase tracking-tighter">Retention</div>
+<div class="text-lg font-headline font-bold text-secondary">High</div>
+</div>
+</div>
+</div>
+<!-- Gradient Accent -->
+<div class="absolute -bottom-10 -left-10 w-32 h-32 bg-secondary/5 blur-2xl rounded-full"></div>
+</div>
+<!-- Summary Card -->
+<div class="bg-surface-container-low rounded-xl p-6 ghost-border">
+<h4 class="font-headline font-bold text-sm mb-4 text-on-surface/40 uppercase tracking-widest">Narrative Summary</h4>
+<p class="text-sm leading-relaxed text-on-surface/90 font-body">
+                            The video follows a <span class="text-primary font-bold">Tutorial</span> structure with a strong focus on technical efficiency. The visual style is <span class="text-secondary font-bold">Cyber-Tech</span>, matching the high-tempo background audio. Key entities identified: AI Automation, Workflow, Productivity Software.
+                        </p>
+</div>
+<!-- CTA Button -->
+<button class="w-full py-4 rounded-xl glass-panel border border-primary/20 text-primary font-headline font-bold hover:bg-primary/10 transition-all flex items-center justify-center gap-3 group">
+                        Generate Edited Version
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB Suppression: Not rendered on dashboard per instructions -->
+</body></html>

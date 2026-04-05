@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles for The Ethereal Lab */
+body {
+    font-family: 'Manrope', sans-serif;
+    background-color: #f5f7f9;
+    color: #2c2f31;
+}
+
+.font-space {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Material Symbols - No fill by default (Ethereal Lab spec) */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Custom scrollbar matching the Surface Hierarchy */
+@layer utilities {
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #d9dde0;
+        border-radius: 10px;
+    }
+}
+
+/* Ghost Border utility — outline-variant at 15% opacity */
+@layer utilities {
+    .ghost-border {
+        border: 1px solid rgba(171, 173, 175, 0.15);
+    }
+}

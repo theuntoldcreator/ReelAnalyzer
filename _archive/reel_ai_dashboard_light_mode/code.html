@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reel AI - Automation Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#ff8ed2",
+                        "primary-dim": "#3939c7",
+                        "on-error-container": "#510017",
+                        "background": "#f5f7f9",
+                        "error": "#b41340",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffeef4",
+                        "inverse-surface": "#0b0f10",
+                        "on-error": "#ffefef",
+                        "on-tertiary-fixed": "#3b002b",
+                        "surface-container-highest": "#d9dde0",
+                        "error-container": "#f74b6d",
+                        "on-background": "#2c2f31",
+                        "secondary-container": "#d6cbff",
+                        "on-primary-fixed-variant": "#0e009d",
+                        "primary-fixed-dim": "#8387ff",
+                        "outline-variant": "#abadaf",
+                        "tertiary-dim": "#882a69",
+                        "on-secondary": "#f6f0ff",
+                        "surface-container": "#e5e9eb",
+                        "outline": "#747779",
+                        "on-secondary-container": "#4a349d",
+                        "tertiary-fixed-dim": "#ef81c4",
+                        "secondary-fixed": "#d6cbff",
+                        "on-tertiary-container": "#63054a",
+                        "surface-dim": "#d0d5d8",
+                        "surface": "#f5f7f9",
+                        "primary": "#4647d3",
+                        "error-dim": "#a70138",
+                        "on-surface-variant": "#595c5e",
+                        "on-secondary-fixed": "#361c89",
+                        "on-tertiary-fixed-variant": "#6e1354",
+                        "inverse-on-surface": "#9a9d9f",
+                        "inverse-primary": "#8083ff",
+                        "on-primary-fixed": "#000000",
+                        "surface-bright": "#f5f7f9",
+                        "on-surface": "#2c2f31",
+                        "on-primary": "#f4f1ff",
+                        "surface-container-low": "#eef1f3",
+                        "surface-variant": "#d9dde0",
+                        "secondary-fixed-dim": "#c8bbff",
+                        "surface-tint": "#4647d3",
+                        "on-secondary-fixed-variant": "#533ea7",
+                        "secondary-dim": "#523da6",
+                        "tertiary-fixed": "#ff8ed2",
+                        "surface-container-high": "#dfe3e6",
+                        "secondary": "#5e4ab3",
+                        "on-primary-container": "#0a0081",
+                        "primary-fixed": "#9396ff",
+                        "tertiary": "#963776",
+                        "primary-container": "#9396ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Space Grotesk"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold text-slate-900 tracking-tighter font-['Space_Grotesk']">Reel AI</span>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="font-['Space_Grotesk'] font-bold tracking-tight text-slate-500 hover:text-indigo-500 transition-colors" href="#">Dashboard</a>
+<a class="font-['Space_Grotesk'] font-bold tracking-tight text-indigo-600 border-b-2 border-indigo-600 active:scale-95 duration-200" href="#">Workflows</a>
+<a class="font-['Space_Grotesk'] font-bold tracking-tight text-slate-500 hover:text-indigo-500 transition-colors" href="#">Assets</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-500 hover:text-indigo-600">notifications</button>
+<button class="material-symbols-outlined text-slate-500 hover:text-indigo-600">settings</button>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-surface-container-highest" data-alt="High-quality profile headshot of a professional user in a bright, modern setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz7tUSj8OchRFzMHLgGCNLq-hNURv31XZBiaEj4PksyoCB-wo9iwGCbwU1I6xHFj5ADMHhT-3xSehV2f3VPzAymJi6sUcBF1BfXJf7A7Kwa67o5R7vdM4tdnIsYvIa1Etg-NBEyh7yWjc82x24-nVOhxejVIKbGw6O7M-g2cyH4bF8MzNBF6nfG1NKEtBBv3-FmD3-PGdmYlNbrSkUOADyXdnEFWhsMCaHj_9iZ7vwF1uVnq-KjzZGOYmw5_CyTVyU8cncJjj74sQ"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 hidden lg:flex flex-col h-full w-64 p-4 space-y-2 bg-slate-50 border-r-0 pt-20">
+<div class="px-4 py-4 mb-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div>
+<h3 class="font-['Space_Grotesk'] font-black text-indigo-600 leading-none">Reel AI</h3>
+<p class="text-xs text-on-surface-variant font-medium mt-1">Automation Engine</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 duration-200 font-['Manrope'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">dashboard</span> Overview
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 bg-white text-indigo-600 shadow-sm rounded-lg hover:translate-x-1 duration-200 font-['Manrope'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">bolt</span> Automations
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 duration-200 font-['Manrope'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">leaderboard</span> Analytics
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 duration-200 font-['Manrope'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">video_library</span> Library
+            </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-slate-200/50 hover:translate-x-1 duration-200 font-['Manrope'] text-sm font-medium" href="#">
+<span class="material-symbols-outlined">group</span> Team
+            </a>
+</nav>
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-3 rounded-xl font-bold text-sm shadow-md hover:shadow-primary/20 transition-all active:scale-95 mb-4">
+            Create New Reel
+        </button>
+<div class="pt-4 border-t border-slate-200 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 font-['Manrope'] text-xs font-medium" href="#">
+<span class="material-symbols-outlined text-sm">help</span> Help Center
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 font-['Manrope'] text-xs font-medium" href="#">
+<span class="material-symbols-outlined text-sm">logout</span> Sign Out
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-16 min-h-screen bg-surface">
+<div class="max-w-screen-2xl mx-auto p-6 md:p-8">
+<!-- Analysis Trigger Header -->
+<section class="mb-10 bg-surface-container-lowest rounded-2xl p-6 shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="flex-1">
+<h1 class="font-headline text-2xl font-bold tracking-tight text-on-background mb-1">Analyze Reel Automation</h1>
+<p class="text-on-surface-variant body-md">Enter a social link or upload raw footage to begin the AI extraction process.</p>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+<div class="relative flex-1 md:w-96">
+<input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-xl px-4 py-3 text-sm font-body" placeholder="https://instagram.com/reel/..." type="text"/>
+</div>
+<button class="flex items-center justify-center gap-2 bg-secondary-container text-on-secondary-container px-6 py-3 rounded-xl font-bold text-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]">upload</span>
+                            Upload Video
+                        </button>
+</div>
+</div>
+</section>
+<!-- Grid Layout: Preview & Content vs AI Assistant -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+<!-- Main Data Content -->
+<div class="xl:col-span-8 space-y-8">
+<!-- Bento Row 1: Video & Audio -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Video Player -->
+<div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm aspect-video relative group border border-outline-variant/10">
+<img class="w-full h-full object-cover" data-alt="Stunning cinematic landscape shot of mountains at dawn with soft morning light and clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUL8DbfC5yX1fYTzLOSHbyQlk1Wx8zUHH3RxrSaDHMK5psYicIlnWIpQPffIKLdXoOt5FgjCJDGVYiJ5HRR2-UQGbRAgRuAh-RABZ2BcHFWb_99Q155x_eVM5SR1I-wxDceOk9E-DF7asffVR3RbP3wy4mTP7Qc7eEtMdXuPCLkeyQLG4V-oJzBU8ydY-J1D4Wr76fm2JhSYAwV1iiDjJt97DJuyPISFGYaMg9V8Q25cFnniEQXhXQiKnv2M3XGvgG2VGjY3o-zEI"/>
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center">
+<button class="w-16 h-16 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<div class="absolute bottom-4 left-4 right-4 bg-white/10 backdrop-blur-xl p-3 rounded-xl flex items-center justify-between border border-white/20">
+<span class="text-white font-label text-xs font-bold tracking-widest">00:42 / 01:15</span>
+<span class="material-symbols-outlined text-white text-sm">fullscreen</span>
+</div>
+</div>
+<!-- Audio Extraction -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/10">
+<h3 class="font-headline text-lg font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">equalizer</span> Audio Extraction
+                            </h3>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-label text-xs uppercase tracking-wider text-on-surface-variant">Vocals / Dialogue</span>
+<span class="text-sm font-bold text-primary">88%</span>
+</div>
+<div class="h-3 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 88%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-label text-xs uppercase tracking-wider text-on-surface-variant">Background Music</span>
+<span class="text-sm font-bold text-secondary">42%</span>
+</div>
+<div class="h-3 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 42%"></div>
+</div>
+</div>
+<div class="bg-surface-container-low p-4 rounded-xl mt-4">
+<p class="text-xs text-on-surface-variant font-medium">Detected: "Cinematic Chill House" by AI Library</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Transcript Section -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline text-lg font-bold">Auto-Generated Transcript</h3>
+<button class="text-primary font-label text-xs font-bold uppercase tracking-widest hover:underline">Copy All</button>
+</div>
+<div class="space-y-4 max-h-80 overflow-y-auto pr-4 custom-scrollbar">
+<div class="flex gap-4">
+<span class="font-label text-[10px] text-primary bg-primary-container/20 px-2 py-1 rounded h-fit font-bold">00:02</span>
+<p class="body-md text-on-surface">Welcome to the future of automated content creation where your vision meets algorithmic precision.</p>
+</div>
+<div class="flex gap-4">
+<span class="font-label text-[10px] text-primary bg-primary-container/20 px-2 py-1 rounded h-fit font-bold">00:08</span>
+<p class="body-md text-on-surface">In this video, we'll demonstrate how the Ethereal Lab UI facilitates seamless workflows for creators worldwide.</p>
+</div>
+<div class="flex gap-4">
+<span class="font-label text-[10px] text-primary bg-primary-container/20 px-2 py-1 rounded h-fit font-bold">00:15</span>
+<p class="body-md text-on-surface">By leveraging high-end scientific instruments and precise automation, you save hours on repetitive manual edits.</p>
+</div>
+<div class="flex gap-4">
+<span class="font-label text-[10px] text-primary bg-primary-container/20 px-2 py-1 rounded h-fit font-bold">00:24</span>
+<p class="body-md text-on-surface">Watch as we extract audio, analyze keywords, and generate metadata in real-time without breaking a sweat.</p>
+</div>
+</div>
+</div>
+<!-- Key Insights Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Key Takeaways -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/10">
+<h3 class="font-headline text-lg font-bold mb-4">Key Takeaways</h3>
+<ul class="space-y-3">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm text-on-surface-variant">Emphasis on "Precision" as a core brand value.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm text-on-surface-variant">Visual focus on minimalistic design philosophy.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+<span class="text-sm text-on-surface-variant">CTA directed towards 'Ethereal Lab' landing page.</span>
+</li>
+</ul>
+</div>
+<!-- Smart Hashtags -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/10">
+<h3 class="font-headline text-lg font-bold mb-4">Smart Hashtags</h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full font-label text-xs font-bold tracking-tight">#AIAutomation</span>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full font-label text-xs font-bold tracking-tight">#ContentCreation</span>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full font-label text-xs font-bold tracking-tight">#UIUXDesign</span>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full font-label text-xs font-bold tracking-tight">#TechTrends2024</span>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full font-label text-xs font-bold tracking-tight">#Efficiency</span>
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full font-label text-xs font-bold tracking-tight">#DigitalMarketing</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: AI Assistant Chat Panel -->
+<div class="xl:col-span-4 h-[calc(100vh-160px)] sticky top-24">
+<div class="bg-surface-container-lowest rounded-2xl h-full flex flex-col shadow-sm border border-outline-variant/10">
+<div class="p-6 border-b border-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg">auto_awesome</span>
+</div>
+<h3 class="font-headline text-lg font-bold">AI Assistant</h3>
+</div>
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+</div>
+<!-- Chat Area -->
+<div class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+<div class="flex flex-col gap-2 max-w-[85%]">
+<div class="bg-surface-container-low p-4 rounded-2xl rounded-tl-none">
+<p class="text-sm text-on-surface">I've analyzed the reel! It has a very technical but accessible tone. Would you like me to generate some alternative captions or scripts based on the transcript?</p>
+</div>
+<span class="text-[10px] text-on-surface-variant font-label uppercase font-bold tracking-wider">Assistant • 2:14 PM</span>
+</div>
+<div class="flex flex-col items-end gap-2 ml-auto max-w-[85%]">
+<div class="bg-primary text-white p-4 rounded-2xl rounded-tr-none">
+<p class="text-sm">Can you suggest 3 viral hooks for the first 5 seconds?</p>
+</div>
+<span class="text-[10px] text-on-surface-variant font-label uppercase font-bold tracking-wider">You • 2:15 PM</span>
+</div>
+<div class="flex flex-col gap-2 max-w-[85%]">
+<div class="bg-surface-container-low p-4 rounded-2xl rounded-tl-none">
+<p class="text-sm font-bold mb-2 text-primary">Here are 3 high-conversion hooks:</p>
+<ol class="text-sm space-y-3 text-on-surface">
+<li>1. "Stop manually editing your reels. There's a better way."</li>
+<li>2. "The UI of the future is here, and it's powered by AI."</li>
+<li>3. "3 hours of work done in 30 seconds. Watch how."</li>
+</ol>
+</div>
+<span class="text-[10px] text-on-surface-variant font-label uppercase font-bold tracking-wider">Assistant • 2:15 PM</span>
+</div>
+</div>
+<!-- Chat Input -->
+<div class="p-4 bg-surface-container-low m-4 rounded-2xl">
+<div class="flex items-center gap-2">
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-sm py-2" placeholder="Ask about the content..." type="text"/>
+<button class="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d9dde0;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #abadaf;
+        }
+    </style>
+</body></html>

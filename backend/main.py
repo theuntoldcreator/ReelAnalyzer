@@ -5,6 +5,8 @@ import asyncio
 import uuid
 import socket
 import subprocess
+import contextlib
+from urllib.parse import urlparse
 from tempfile import NamedTemporaryFile
 from dotenv import load_dotenv
 
@@ -45,6 +47,25 @@ class ChatRequest(BaseModel):
     transcript_text: str
     question: str
 
+@contextlib.contextmanager
+def dns_override(host_map: dict):
+    """Temporarily patches socket.getaddrinfo to resolve specific hosts to given IPs."""
+    original_getaddrinfo = socket.getaddrinfo
+    
+    def patched_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+        if host in host_map:
+            # We return a list containing a single 5-tuple matching the getaddrinfo format
+            # (family, type, proto, canonname, sockaddr)
+            # sockaddr for IPv4 is (address, port)
+            return [(socket.AF_INET, socket.SOCK_STREAM, 6, '', (host_map[host], port))]
+        return original_getaddrinfo(host, port, family, type, proto, flags)
+    
+    socket.getaddrinfo = patched_getaddrinfo
+    try:
+        yield
+    finally:
+        socket.getaddrinfo = original_getaddrinfo
+
 def resolve_hostname_robustly(hostname: str) -> str:
     """Try multiple methods to resolve a hostname to an IP."""
     # Method 1: Standard socket (fastest)
@@ -55,14 +76,33 @@ def resolve_hostname_robustly(hostname: str) -> str:
     
     # Method 2: nslookup via subprocess (often bypasses Python-specific blocks)
     try:
-        res = subprocess.check_output(["nslookup", hostname], stderr=subprocess.DEVNULL, timeout=2).decode()
-        # Look for the last 'Address: ' line which isn't the DNS server's address
+        res = subprocess.check_output(["nslookup", hostname], stderr=subprocess.DEVNULL, timeout=10).decode()
         addresses = []
         for line in res.splitlines():
             if "Address:" in line and "#" not in line:
                 addresses.append(line.split("Address:")[1].strip())
         if addresses:
             return addresses[-1]
+    except:
+        pass
+
+    # Method 3: Check global connectivity to 8.8.8.8 to diagnose
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(2)
+        s.connect(("8.8.8.8", 53))
+        s.close()
+        # Fallback to confirmed global IPs if all else fails
+        fallbacks = {
+            "www.youtube.com": "173.194.208.91",
+            "youtube.com": "173.194.208.91",
+            "www.instagram.com": "57.144.200.34",
+            "instagram.com": "57.144.200.34",
+            "www.tiktok.com": "161.117.71.74",
+            "tiktok.com": "161.117.71.74",
+        }
+        if hostname in fallbacks:
+            return fallbacks[hostname]
     except:
         pass
     
@@ -84,13 +124,24 @@ async def process_video_generator(url: str = None, file_obj=None, file_ext='.mp4
             yield format_sse("progress", {"percentage": 10, "message": "Downloading video from URL..."})
             await asyncio.sleep(0.5)
             temp_video_path = f"/tmp/reel_video_{hash(url)}.mp4"
-            # Step 1.1: Pre-resolution DNS health check for IPv4 (Robust)
-            resolved_ip = resolve_hostname_robustly("www.youtube.com")
+            
+            # Step 1.1: Systematic DNS Resolution for the provided platform
+            parsed_url = urlparse(url)
+            hostname = parsed_url.hostname or "www.youtube.com"
+            
+            # Identify secondary domain if it's a www variant
+            alt_hostname = hostname[4:] if hostname.startswith("www.") else f"www.{hostname}"
+            
+            resolved_ip = resolve_hostname_robustly(hostname)
             if not resolved_ip:
-                yield format_sse("error", {"detail": "DNS resolution failed for www.youtube.com even with fallbacks. Your local system is strictly blocking this process."})
+                # Try the alternate hostname just in case 
+                resolved_ip = resolve_hostname_robustly(alt_hostname)
+            
+            if not resolved_ip:
+                yield format_sse("error", {"detail": f"DNS resolution failed for {hostname} even with fallbacks. Your local system is strictly blocking this process."})
                 return
             
-            print(f"DNS Resolution successful: {resolved_ip}")
+            print(f"Systematic DNS Resolution successful for {hostname}: {resolved_ip}")
 
             ydl_opts = {
                 'format': 'best',
@@ -99,14 +150,25 @@ async def process_video_generator(url: str = None, file_obj=None, file_ext='.mp4
                 'no_warnings': False,
                 'nocheckcertificate': True,
                 'geo_bypass': True,
-                'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
+                'user_agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1',
                 'cookiefile': None,
-                'source_address': '0.0.0.0', # Force IPv4 to avoid broken IPv6 networking
-                'noproxy': True, # Disable any system proxies which may interfere
+                'source_address': '0.0.0.0',
+                'noproxy': True,
+                'extractor_args': {'youtube': {'player_client': ['ios']}},
             }
+
+            # Map the target domain and its variant to the resolved IP for a total bypass
+            overrides = {
+                hostname: resolved_ip,
+                alt_hostname: resolved_ip,
+                "www.youtube.com": resolved_ip, # Keep defaults for common sub-requests
+                "i.ytimg.com": resolved_ip,
+            }
+
             try:
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    ydl.download([url])
+                with dns_override(overrides):
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                        ydl.download([url])
             except Exception as download_error:
                 print(f"yt-dlp download error: {str(download_error)}")
                 raise Exception(f"Failed to download video from URL: {str(download_error)}")

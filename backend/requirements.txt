@@ -6,5 +6,5 @@ moviepy==1.0.3
 pydantic
 python-dotenv
 openai-whisper
-google-generativeai
+openai
 sse-starlette
